@@ -21,15 +21,15 @@ notes = get_notes(book_name)
 insert_notes(notes, tmp_dir)
 
 # export
-# new_htmlz_path = os.path.join(tmp_dir, book_name + '_with_notes.htmlz')
-# subprocess.call(["rm", new_htmlz_path], stdout=FNULL, stderr=FNULL)
-# os.system(subprocess.list2cmdline(["cd", tmp_dir, "&&",
-# 	"zip", "-r", new_htmlz_path, "*"]))
-# new_mobi_path = os.path.join(book_dir, book_name + '_with_notes.mobi')
-# subprocess.call(["rm", new_mobi_path], stdout=FNULL, stderr=FNULL)
-# subprocess.call(
-# 	[os.path.join(calibre_dir, "ebook-convert"), new_htmlz_path, new_mobi_path])
-# subprocess.call(["rm", htmlz_path], stdout=FNULL, stderr=FNULL)
-# # subprocess.call(["rm", "-rf", tmp_dir], stdout=FNULL, stderr=FNULL)
+new_htmlz_path = os.path.join(tmp_dir, book_name + '_with_notes.htmlz')
+subprocess.call(["rm", new_htmlz_path], stdout=FNULL, stderr=FNULL)
+os.system(subprocess.list2cmdline(["cd", tmp_dir, "&&",
+	"zip", "-r", new_htmlz_path, "*"]))
+new_mobi_path = os.path.join(book_dir, book_name + '_with_notes.mobi')
+subprocess.call(["rm", new_mobi_path], stdout=FNULL, stderr=FNULL)
+subprocess.call(
+	[os.path.join(calibre_dir, "ebook-convert"), new_htmlz_path, new_mobi_path])
+subprocess.call(["rm", htmlz_path], stdout=FNULL, stderr=FNULL)
+# subprocess.call(["rm", "-rf", tmp_dir], stdout=FNULL, stderr=FNULL)
 
 
