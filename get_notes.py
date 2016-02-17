@@ -14,11 +14,14 @@ class DoubanFetcher():
 		self.note_link = 'http://book.douban.com/subject/' + \
 		 	self.book_id + '/annotation?sort=rank&start='
 		for i in xrange(0, 10):
+			i = 2 # testing
 			start = str(10 * i)
 			notes = self.get_note_from_page(self.note_link + start)
+			num = 0
 			for note in notes:
+				num += 1
 				yield note
-			if len(notes) < 10:
+			if num < 10:
 				break
 
 	def get_book_id(self):
@@ -31,7 +34,7 @@ class DoubanFetcher():
 		return content[:end_index]
 
 	def get_note_from_page(self, link):
-		time.sleep(random.randint(1, 5))
+		# time.sleep(random.randint(1, 5))
 		req = urllib2.Request(link, None, DOUBAN_HEADER)
 		response = urllib2.urlopen(req).read()
 		anchor = 'div class="reading-note"'
@@ -41,12 +44,10 @@ class DoubanFetcher():
 			start_index = response.find(text_anchor, anchor_index) + len(text_anchor)
 			text_end_anchor = '<div class="col-rec-con clearfix">'
 			end_index = response.find(text_end_anchor, start_index)
-			yeild response[start_index: end_index]
+			yield response[start_index: end_index]
 			anchor_index = response.find(anchor, end_index)
 
 def get_notes(book_name):
 	douban_fetcher = DoubanFetcher(book_name)
 	notes = douban_fetcher.get_notes()
-	for note in notes:
-		print note
 	return notes
