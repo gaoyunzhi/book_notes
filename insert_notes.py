@@ -42,7 +42,13 @@ class NoteWriter:
 				self.end_index = current_content_index
 			content_index = current_content_index
 			grace_space = 10	
-		self.notes_index.append([self.start_index, self.end_index])
+		user_note [] 
+		for char in self.current_note[self.end_index:]:
+			if ord(char) < 128:
+				continue
+			user_note.append(char)
+		self.notes_index.append(
+			[self.start_index, self.end_index], "".join(user_note))
 
 	def try_find_anchor(self, note_index):
 		end_index = note_index + 1
@@ -75,18 +81,28 @@ class NoteWriter:
 		self.note_index.sort()
 		pre_start = None
 		pre_end = 0
-		note_index = []
-		for start, end in self.note_index:
+		pre_note = ""
+		new_note_index = []
+		user_notes = []
+		for start, end, note in self.note_index:
 			if pre_end >= start:
 				pre_end = end
 			else:
 				if pre_start != None:
-					note_index += [pre_start, pre_end]
+					new_note_index.append([pre_start, pre_end, pre_note])
 				pre_start = start
 				pre_end = end
+				pre_note = note
 		if pre_start != None:
-			note_index += [pre_start, pre_end]
-		print note_index
+			new_note_index.append([pre_start, pre_end, pre_note])
+		splitted_contents = []
+		for start, end, note in new_note_index:
+			if len(splitted_contents) == 0:
+				splitted_contents.append(self.content[:start])
+			splitted_contents.append("<div class="">")
+
+
+
 			
 
 
@@ -104,9 +120,9 @@ def insert_notes(notes, tmp_dir):
 	for note in notes:
 		note_writer.add(note)
 
-	index_file_handle = open(os.path.join(tmp_dir, 'index.html'), 'w')
-	index_file_handle.write(note_writer.getContentWithNotes)
-	index_file_handle.close()
+	# index_file_handle = open(os.path.join(tmp_dir, 'index.html'), 'w')
+	# index_file_handle.write(note_writer.getContentWithNotes())
+	# index_file_handle.close()
 	
 	css_file_handle = open(os.path.join(tmp_dir, 'style.css'), 'w')
 	css_file_handle.write('.calibre1001 { border-bottom: 1px dashed #999; display: inline;}')
