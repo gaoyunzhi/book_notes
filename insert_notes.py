@@ -30,6 +30,7 @@ class NoteWriter:
 		grace_space = 10
 		last_grace_space = 0
 		for index in xrange(note_index + len(self.anchor), len(self.current_note)):
+			char = self.current_note[index]
 			if ord(char) < 128:
 				grace_space += 1
 				continue
@@ -42,13 +43,13 @@ class NoteWriter:
 				self.end_index = current_content_index
 			content_index = current_content_index
 			grace_space = 10	
-		user_note [] 
+		user_note = [] 
 		for char in self.current_note[self.end_index:]:
 			if ord(char) < 128:
 				continue
 			user_note.append(char)
 		self.notes_index.append(
-			[self.start_index, self.end_index], "".join(user_note))
+			[self.start_index, self.end_index, "".join(user_note)])
 
 	def try_find_anchor(self, note_index):
 		end_index = note_index + 1
@@ -78,38 +79,36 @@ class NoteWriter:
 		# distinguish the case between 0, 1 and >= 2
 
 	def getContentWithNotes(self):
-		self.note_index.sort()
+		self.notes_index.sort()
 		pre_start = None
 		pre_end = 0
 		pre_note = ""
-		new_note_index = []
+		new_notes_index = []
 		user_notes = []
-		for start, end, note in self.note_index:
+		for start, end, note in self.notes_index:
 			if pre_end >= start:
 				pre_end = end
 			else:
 				if pre_start != None:
-					new_note_index.append([pre_start, pre_end, pre_note])
+					new_notes_index.append([pre_start, pre_end, pre_note])
 				pre_start = start
 				pre_end = end
 				pre_note = note
 		if pre_start != None:
-			new_note_index.append([pre_start, pre_end, pre_note])
+			new_notes_index.append([pre_start, pre_end, pre_note])
 		splitted_contents = []
-		for start, end, note in new_note_index:
-			if len(splitted_contents) == 0:
-				splitted_contents.append(self.content[:start])
-			splitted_contents.append("<div class="">")
-
-
-
-			
-
-
-
-
-			
-
+		pre_end = 0
+		for start, end, note in new_notes_index:
+			splitted_contents.append(self.content[pre_end :start])
+			print self.content[pre_end :start][-100:]
+			splitted_contents.append('<span class="calibre_1001">')
+			splitted_contents.append(self.content[start: end + 1])
+			pre_end = end + 1
+			splitted_contents.append('</span><span class="calibre_1002">')
+			splitted_contents.append(note)
+			splitted_contents.append('</span>')
+		splitted_contents.append(self.content[pre_end:])
+		return "".join(splitted_contents).encode('utf-8')
 
 def insert_notes(notes, tmp_dir):
 	index_file_handle = open(os.path.join(tmp_dir, 'index.html'), 'r')
@@ -120,11 +119,11 @@ def insert_notes(notes, tmp_dir):
 	for note in notes:
 		note_writer.add(note)
 
-	# index_file_handle = open(os.path.join(tmp_dir, 'index.html'), 'w')
-	# index_file_handle.write(note_writer.getContentWithNotes())
-	# index_file_handle.close()
+	index_file_handle = open(os.path.join(tmp_dir, 'index.html'), 'w')
+	index_file_handle.write(note_writer.getContentWithNotes())
+	index_file_handle.close()
 	
-	css_file_handle = open(os.path.join(tmp_dir, 'style.css'), 'w')
-	css_file_handle.write('.calibre1001 { border-bottom: 1px dashed #999; display: inline;}')
-	css_file_handle.write('.calibre1002 { font-size: 60%;}')
+	css_file_handle = open(os.path.join(tmp_dir, 'style.css'), 'a')
+	css_file_handle.write('.calibre_1001 { border-bottom: 1px dashed #999; display: inline;}\n')
+	css_file_handle.write('.calibre_1002 { font-size: 60%;}')
 	css_file_handle.close()
