@@ -11,8 +11,8 @@ book_name = os.path.splitext(org_book_file)[0]
 htmlz_path = os.path.join(book_dir, book_name + '.htmlz')
 tmp_dir = os.path.join(book_dir, book_name + "_tmp")
 
-# subprocess.call(["rm", htmlz_path], stdout=FNULL, stderr=FNULL)
-# subprocess.call([os.path.join(calibre_dir, "ebook-convert"), org_path, htmlz_path])
+subprocess.call(["rm", htmlz_path], stdout=FNULL, stderr=FNULL)
+subprocess.call([os.path.join(calibre_dir, "ebook-convert"), org_path, htmlz_path])
 subprocess.call(["rm", "-rf", tmp_dir], stdout=FNULL, stderr=FNULL)
 subprocess.call(["unzip", htmlz_path, "-d", tmp_dir], stdout=FNULL)
 

@@ -101,10 +101,10 @@ class NoteWriter:
 		for start, end, note in new_notes_index:
 			splitted_contents.append(self.content[pre_end :start])
 			print self.content[pre_end :start][-100:]
-			splitted_contents.append('<span class="calibre_1001">')
+			splitted_contents.append('<b class="calibre_1001">')
 			splitted_contents.append(self.content[start: end + 1])
 			pre_end = end + 1
-			splitted_contents.append('</span><span class="calibre_1002">')
+			splitted_contents.append('</b><span class="calibre_1002">')
 			splitted_contents.append(note)
 			splitted_contents.append('</span>')
 		splitted_contents.append(self.content[pre_end:])
@@ -124,6 +124,6 @@ def insert_notes(notes, tmp_dir):
 	index_file_handle.close()
 	
 	css_file_handle = open(os.path.join(tmp_dir, 'style.css'), 'a')
-	css_file_handle.write('.calibre_1001 { border-bottom: 1px dashed #999; display: inline;}\n')
+	css_file_handle.write('.calibre_1001 { text-decoration: underline;}\n')
 	css_file_handle.write('.calibre_1002 { font-size: 60%;}')
 	css_file_handle.close()
