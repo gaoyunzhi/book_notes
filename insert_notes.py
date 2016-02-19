@@ -36,7 +36,7 @@ class NoteWriter:
 				continue
 			current_content_index = \
 				self.content.find(char, content_index - last_grace_space + 1)
-			if current_content_index == -1 or 
+			if current_content_index == -1 or \
 				current_content_index - content_index > grace_space:
 				continue
 			last_grace_space = current_content_index - content_index - 1
