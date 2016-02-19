@@ -36,7 +36,8 @@ class NoteWriter:
 				continue
 			current_content_index = \
 				self.content.find(char, content_index - last_grace_space + 1)
-			if current_content_index - content_index > grace_space:
+			if current_content_index == -1 or 
+				current_content_index - content_index > grace_space:
 				continue
 			last_grace_space = current_content_index - content_index - 1
 			if last_grace_space == 0:
@@ -100,7 +101,6 @@ class NoteWriter:
 		pre_end = 0
 		for start, end, note in new_notes_index:
 			splitted_contents.append(self.content[pre_end :start])
-			print self.content[pre_end :start][-100:]
 			splitted_contents.append('<b class="calibre_1001">')
 			splitted_contents.append(self.content[start: end + 1])
 			pre_end = end + 1
@@ -124,6 +124,6 @@ def insert_notes(notes, tmp_dir):
 	index_file_handle.close()
 	
 	css_file_handle = open(os.path.join(tmp_dir, 'style.css'), 'a')
-	css_file_handle.write('.calibre_1001 { text-decoration: underline;}\n')
+	css_file_handle.write('.calibre_1001 { text-decoration: underline; text-decoration-style: dotted;}\n')
 	css_file_handle.write('.calibre_1002 { font-size: 60%;}')
 	css_file_handle.close()
